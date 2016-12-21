@@ -18,18 +18,22 @@ def chapters_matching(query)
   each_chapter do |number, name, contents|
     # need to add another key/value that hold specifc paragraph
     # need to find the paragraph that contains query
-    results << {number: number, name: name} if contents.include?(query)
+    results << {number: number, 
+                name: name, 
+                paragraphs: fetch_paragraphs(contents, query)} if contents.include?(query)
   end
 
   results
 end
 
 def fetch_paragraphs(content, query)
-  # need to split content into paragraphs and look
-  # if each paragraph contains the query
-  # use part of the in_paragraphs to help
-  # how will we store the paragraphs, as we also
-  # need to keep track of the ids?  
+  results = {}
+
+  content.split("\n\n").each_with_index do |paragraph, i|
+    results[i] = paragraph if paragraph.include?(query)
+  end
+
+  results
 end
 
 before do
@@ -38,8 +42,8 @@ end
 
 helpers do
   def in_paragraphs(text)
-    text.split("\n\n").map do |paragraph|
-      "<p>#{paragraph}</p>"
+    text.split("\n\n").each_with_index.map do |paragraph, i|
+      "<p id=\"#{i}\">#{paragraph}</p>"
     end.join
   end
 end

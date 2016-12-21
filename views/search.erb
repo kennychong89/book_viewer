@@ -12,7 +12,12 @@
     <h2 class="content-subhead">Results for '<%= params[:query] %>'</h2>
     <ul>
       <% @search_results.each do |result| %>
-        <li><a href="/chapters/<%= result[:number] %>"><%= result[:name] %></a></li>
+        <li><%= result[:name] %></li>
+        <ul>
+          <% result[:paragraphs].each_pair do |id, para| %>
+            <li><a href="/chapters/<%= result[:number] %>?id=#<%= id %>"><%= para %></a></li>
+          <% end %>	
+        </ul>
       <% end %>
     </ul>
   <% end %>
